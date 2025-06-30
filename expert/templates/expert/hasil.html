@@ -1,0 +1,64 @@
+{% extends 'expert/base.html' %}
+
+{% block title %}
+  Hasil - Diagnosa Sehat
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow space-y-4">
+    {% if identitas %}
+      <div class="bg-gray-50 p-4 rounded border text-sm text-left space-y-1">
+        <h3 class="font-semibold text-gray-700">Identitas Pasien</h3>
+        <p>
+          <strong>Nama:</strong> {{ identitas.nama }}
+        </p>
+        <p>
+          <strong>Usia:</strong> {{ identitas.usia }} tahun
+        </p>
+        <p>
+          <strong>Jenis Kelamin:</strong> {{ identitas.jenis_kelamin }}
+        </p>
+      </div>
+    {% endif %}
+
+    {% if hasil %}
+      <div class="space-y-2">
+        <h2 class="text-xl font-bold text-green-700">Kemungkinan Terbesar:</h2>
+        <p class="text-lg">
+          <strong>{{ hasil.diagnosis }}</strong>
+          <span class="text-sm text-gray-600">({{ hasil.score }}% cocok)</span>
+        </p>
+        <p class="text-sm text-gray-600 italic">{{ hasil.description }}</p>
+        <p class="text-gray-700">{{ hasil.advice }}</p>
+      </div>
+    {% else %}
+      <p class="text-red-500">Tidak ditemukan diagnosa berdasarkan gejala yang dipilih.</p>
+    {% endif %}
+
+    {% if kemungkinan|length > 1 %}
+      <div class="pt-4 border-t">
+        <h3 class="text-lg font-semibold mb-2">Kemungkinan Lain:</h3>
+        <ul class="list-disc ml-6 text-sm space-y-3 text-gray-700">
+          {% for k in kemungkinan|slice:'1:' %}
+            <li>
+              <strong>{{ k.diagnosis }}</strong> – {{ k.score }}% cocok<br />
+              <span class="text-xs italic text-gray-600">{{ k.description }}</span><br />
+              <span class="text-xs text-gray-500">Gejala cocok: {{ k.matched|join:', ' }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="mt-6 text-xs text-gray-500 border-t pt-4">
+      <p>
+        <strong>Disclaimer:</strong> Hasil diagnosa ini bersifat prediksi awal berdasarkan gejala yang Anda pilih. Sistem ini tidak menggantikan pemeriksaan medis secara langsung.
+        <span class="font-medium text-red-600">Segera konsultasikan dengan dokter atau tenaga medis profesional.</span>
+      </p>
+    </div>
+
+    <div class="pt-6 text-center">
+      <a href="{% url 'home' %}" class="inline-block text-blue-600 hover:underline text-sm">&larr; Kembali ke Form</a>
+    </div>
+  </div>
+{% endblock %}
